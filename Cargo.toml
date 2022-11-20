@@ -1,0 +1,20 @@
+[package]
+name = "rust-msg"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Actix Web
+actix-web = "4"
+actix = "0.13"
+actix-web-actors = "4"
+
+# Serde
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Sqlite3
+sqlite = "0.30"
+
+# Other
+env_logger = "0.9"
