@@ -9,7 +9,7 @@ async fn login() -> impl Responder {
 
 #[actix_web::get("/register")]
 async fn register() -> impl Responder {
-    HttpResponse::Ok().body("")
+    NamedFile::open_async("./static/register.html").await
 }
 
 #[actix_web::get("/home")]
@@ -29,6 +29,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .service(login)
+            .service(register)
             .service(home)
             .service(Files::new("/static", "./static").prefer_utf8(true))
     })

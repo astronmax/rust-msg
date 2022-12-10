@@ -1,0 +1,14 @@
+html,
+body {
+    /* background-color: #1a1a1a; */
+    background-color: #17181a;
+    color: whitesmoke;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.parent {
+    min-height: 100vh;
+}
