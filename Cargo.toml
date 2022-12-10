@@ -3,18 +3,23 @@ name = "rust-msg"
 version = "0.1.0"
 edition = "2021"
 
+[profile.dev]
+opt-level = 2
+
 [dependencies]
 # Actix Web
-actix-web = "4"
 actix = "0.13"
+actix-web = "4"
 actix-web-actors = "4"
+actix-files = "0.6"
 
 # Serde
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
-# Sqlite3
-sqlite = "0.30"
+# MySQL
+mysql = "23"
 
 # Other
-env_logger = "0.9"
+log = "0.4"
+askama = "0.11"
