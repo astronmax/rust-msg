@@ -1,20 +1,10 @@
+mod auth;
 mod templates;
 
-use std::vec;
-
-use actix_files::{Files, NamedFile};
-use actix_web::{App, HttpResponse, HttpServer, Responder};
+use actix_files::Files;
+use actix_web::{middleware::Logger, App, HttpResponse, HttpServer, Responder};
 use askama::Template;
-
-#[actix_web::get("/login")]
-async fn login() -> impl Responder {
-    NamedFile::open_async("./static/login.html").await
-}
-
-#[actix_web::get("/register")]
-async fn register() -> impl Responder {
-    NamedFile::open_async("./static/register.html").await
-}
+use env_logger::Env;
 
 #[actix_web::get("/home")]
 async fn home() -> impl Responder {
@@ -75,16 +65,39 @@ async fn home() -> impl Responder {
 
 #[actix_web::get("/search")]
 async fn search() -> impl Responder {
-    let body = templates::SearchTemplate {};
+    let users = vec![
+        templates::User {
+            name: "user_1".to_string(),
+        },
+        templates::User {
+            name: "user_2".to_string(),
+        },
+        templates::User {
+            name: "user_3".to_string(),
+        },
+        templates::User {
+            name: "user_4".to_string(),
+        },
+        templates::User {
+            name: "user_5".to_string(),
+        },
+    ];
+
+    let body = templates::SearchTemplate { users: users };
     HttpResponse::Ok().body(body.render().unwrap())
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
+
     HttpServer::new(move || {
         App::new()
-            .service(login)
-            .service(register)
+            .wrap(Logger::default())
+            .wrap(Logger::new("%a %{User-Agent}i"))
+            .service(auth::login_get)
+            .service(auth::check_login)
+            .service(auth::register_get)
             .service(home)
             .service(search)
             .service(Files::new("/static", "./static").prefer_utf8(true))

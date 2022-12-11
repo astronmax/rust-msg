@@ -18,6 +18,12 @@ pub struct HomeTemplate {
     pub owner: String,
 }
 
+pub struct User {
+    pub name: String,
+}
+
 #[derive(Template)]
 #[template(path = "search.html")]
-pub struct SearchTemplate {}
+pub struct SearchTemplate {
+    pub users: Vec<User>,
+}

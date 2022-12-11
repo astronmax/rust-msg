@@ -17,11 +17,28 @@
                 <h1>Search for users!</h1>
             </div>
 
-            <div class="input-group">
+            <form class="input-group">
                 <div class="form-outline">
                     <input type="search" id="form1" class="form-control" />
                 </div>
                 <button type="button" class="btn btn-primary">Find</button>
+            </form>
+
+            <div class="mt-4">
+                <div class="d-flex justify-content-center mt-1 mb-1">
+                    <p style="flex: 3;">Lorem ipsum dolor sit amet</p>
+                    <button class="btn, btn-success" style="flex: 1;">Start chat</button>
+                </div>
+                {% for user in users %}
+                <div class="d-flex justify-content-center mt-1 mb-1">
+                    <p style="flex: 3;">{{ user.name }}</p>
+                    <button class="btn, btn-success" style="flex: 1;">Start chat</button>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4">
+                <button class="btn btn-secondary">Back to home</button>
             </div>
         </div>
     </div>

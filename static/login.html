@@ -16,17 +16,17 @@
       <div class="jumbotron text-center, mb-4">
         <h1>Welcome back!</h1>
       </div>
-      <form>
-        <!-- Email input -->
+      <form action="/check_login" method="post">
+        <!-- Login input -->
         <div class="form-outline mb-4">
-          <input type="email" id="form2Example1" class="form-control" />
-          <label class="form-label" for="form2Example1">Email address</label>
+          <input type="text" name="login" id="loginForm" class="form-control" />
+          <label class="form-label" for="loginForm">Login</label>
         </div>
 
         <!-- Password input -->
         <div class="form-outline mb-4">
-          <input type="password" id="form2Example2" class="form-control" />
-          <label class="form-label" for="form2Example2">Password</label>
+          <input type="text" name="password" id="passwordForm" class="form-control" />
+          <label class="form-label" for="passwordForm">Password</label>
         </div>
 
         <!-- 2 column grid layout for inline styling -->
@@ -34,7 +34,7 @@
           <div class="col d-flex justify-content-center">
             <!-- Checkbox -->
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
+              <input class="form-check-input" type="checkbox" name="remember" value="" checked />
               <label class="form-check-label" for="form2Example31"> Remember me </label>
             </div>
           </div>
@@ -47,7 +47,7 @@
 
         <div class="row">
           <!-- Submit button -->
-          <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+          <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
         </div>
       </form>
     </div>
