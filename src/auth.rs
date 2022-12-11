@@ -43,7 +43,9 @@ async fn check_login(req: HttpRequest, form: web::Form<LoginForm>) -> impl Respo
         todo!();
     }
 
-    HttpResponse::Ok().body("")
+    HttpResponse::MovedPermanently()
+        .append_header(("Location", "http://127.0.0.1:8080/home"))
+        .body("")
 }
 
 #[actix_web::get("/login")]
