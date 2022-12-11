@@ -1,10 +1,12 @@
 mod auth;
+mod entity;
 mod templates;
 
 use actix_files::Files;
-use actix_web::{middleware::Logger, App, HttpResponse, HttpServer, Responder};
+use actix_web::{middleware::Logger, web, App, HttpResponse, HttpServer, Responder};
 use askama::Template;
 use env_logger::Env;
+use mysql::Pool;
 
 #[actix_web::get("/home")]
 async fn home() -> impl Responder {
@@ -87,12 +89,43 @@ async fn search() -> impl Responder {
     HttpResponse::Ok().body(body.render().unwrap())
 }
 
+fn get_mysql_uri() -> String {
+    let mysql_root_pass = match std::env::var("MYSQL_ROOT_PASSWORD") {
+        Ok(val) => val,
+        Err(_e) => panic!("need env variable MYSQL_ROOT_PASSWORD"),
+    };
+
+    let mysql_host = match std::env::var("MYSQL_HOST") {
+        Ok(val) => val,
+        Err(_e) => panic!("need env variable MYSQL_HOST"),
+    };
+
+    let mysql_port = match std::env::var("MYSQL_PORT") {
+        Ok(val) => val,
+        Err(_e) => panic!("need env variable MYSQL_PORT"),
+    };
+
+    let mysql_db = match std::env::var("MYSQL_DB") {
+        Ok(val) => val,
+        Err(_e) => panic!("need env variable MYSQL_DB"),
+    };
+
+    return format!(
+        "mysql://root:{}@{}:{}/{}",
+        mysql_root_pass, mysql_host, mysql_port, mysql_db
+    );
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
+    let url = get_mysql_uri();
+    let pool = Pool::new(url.as_str()).unwrap();
+
     HttpServer::new(move || {
         App::new()
+            .app_data(pool.clone())
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .service(auth::login_get)
