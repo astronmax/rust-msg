@@ -1,92 +1,55 @@
+mod api;
 mod auth;
-mod entity;
-mod templates;
+mod server;
+mod websock;
 
-use actix_files::Files;
-use actix_web::{middleware::Logger, web, App, HttpResponse, HttpServer, Responder};
-use askama::Template;
+use actix::{Actor, Addr};
+use actix_files::{Files, NamedFile};
+use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web_actors::ws;
 use env_logger::Env;
 use mysql::Pool;
 
-#[actix_web::get("/home")]
-async fn home() -> impl Responder {
-    let chats = vec![
-        templates::Chat {
-            name: "astron".to_string(),
-            status: true,
+#[actix_web::get("/ws/{username}")]
+async fn websocket(
+    username: web::Path<String>,
+    req: HttpRequest,
+    stream: web::Payload,
+    srv: web::Data<Addr<server::ChatServer>>,
+) -> Result<HttpResponse, Error> {
+    ws::start(
+        websock::WsChatSession {
+            addr: srv.get_ref().clone(),
+            username: username.into_inner(),
         },
-        templates::Chat {
-            name: "max".to_string(),
-            status: false,
-        },
-        templates::Chat {
-            name: "max2".to_string(),
-            status: false,
-        },
-        templates::Chat {
-            name: "max3".to_string(),
-            status: false,
-        },
-    ];
-
-    let messages = vec![
-        templates::Message {
-            author: "AAA".to_string(),
-            text: "klsdkldklsds".to_string(),
-        },
-        templates::Message {
-            author: "BBB".to_string(),
-            text: "sowpwoqpwopwqwp[pop".to_string(),
-        },
-        templates::Message {
-            author: "AAA".to_string(),
-            text: "klsdkldklsds".to_string(),
-        },
-        templates::Message {
-            author: "BBB".to_string(),
-            text: "sowpwoqpwopwqwp[pop".to_string(),
-        },
-        templates::Message {
-            author: "AAA".to_string(),
-            text: "klsdkldklsds".to_string(),
-        },
-        templates::Message {
-            author: "BBB".to_string(),
-            text: "sowpwoqpwopwqwp[pop".to_string(),
-        },
-    ];
-
-    let body = templates::HomeTemplate {
-        messages: messages,
-        chats: chats,
-        owner: "Astronmax".to_string(),
-    };
-
-    HttpResponse::Ok().body(body.render().unwrap())
+        &req,
+        stream,
+    )
 }
 
-#[actix_web::get("/search")]
-async fn search() -> impl Responder {
-    let users = vec![
-        templates::User {
-            name: "user_1".to_string(),
-        },
-        templates::User {
-            name: "user_2".to_string(),
-        },
-        templates::User {
-            name: "user_3".to_string(),
-        },
-        templates::User {
-            name: "user_4".to_string(),
-        },
-        templates::User {
-            name: "user_5".to_string(),
-        },
-    ];
+#[actix_web::get("/")]
+async fn index() -> impl Responder {
+    NamedFile::open_async("./static/login.html").await
+}
 
-    let body = templates::SearchTemplate { users: users };
-    HttpResponse::Ok().body(body.render().unwrap())
+#[actix_web::get("/home/{username}/{chat}")]
+async fn home(_: web::Path<(String, String)>) -> impl Responder {
+    NamedFile::open_async("./static/home.html").await
+}
+
+#[actix_web::get("/login")]
+async fn login() -> impl Responder {
+    NamedFile::open_async("./static/login.html").await
+}
+
+#[actix_web::get("/register")]
+async fn register() -> impl Responder {
+    NamedFile::open_async("./static/register.html").await
+}
+
+#[actix_web::get("/search/{username}")]
+async fn search(_: web::Path<String>) -> impl Responder {
+    NamedFile::open_async("./static/search.html").await
 }
 
 fn get_mysql_uri() -> String {
@@ -122,18 +85,26 @@ async fn main() -> std::io::Result<()> {
 
     let url = get_mysql_uri();
     let pool = Pool::new(url.as_str()).unwrap();
+    let srv = server::ChatServer::new(Box::new(pool.clone())).start();
 
+    log::info!("Starting HTTP server at http://127.0.0.1:8080");
     HttpServer::new(move || {
         App::new()
-            .app_data(pool.clone())
-            .wrap(Logger::default())
-            .wrap(Logger::new("%a %{User-Agent}i"))
-            .service(auth::login_get)
-            .service(auth::check_login)
-            .service(auth::register_get)
-            .service(home)
-            .service(search)
             .service(Files::new("/static", "./static").prefer_utf8(true))
+            .app_data(web::Data::new(srv.clone()))
+            .app_data(pool.clone())
+            .service(index)
+            .service(home)
+            .service(login)
+            .service(register)
+            .service(search)
+            .service(websocket)
+            .service(api::valid_user)
+            .service(api::get_messages)
+            .service(api::get_chats)
+            .service(api::get_users)
+            .service(api::add_user)
+            .service(api::check_token)
     })
     .bind(("0.0.0.0", 8080))?
     .run()

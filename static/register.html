@@ -2,74 +2,64 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/style.css">
-  <title>Register page</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Register page</title>
 </head>
 
 <body>
-  <div class="parent container d-flex justify-content-center align-items-center h-100 pt-0 pb-0 ps-0 px-0">
-    <div class="child">
-      <div class="jumbotron text-center, mb-4">
-        <h1>Create account</h1>
-      </div>
-      <form>
-        <div class="container">
-          <!-- Name input -->
-          <div class="form-outline mb-4">
-            <input type="text" id="registerName" class="form-control">
-            <label class="form-label" for="registerName" style="margin-left: 0px;">Name</label>
-            <div class="form-notch">
-              <div class="form-notch-leading" style="width: 9px;"></div>
-              <div class="form-notch-middle" style="width: 42.4px;"></div>
-              <div class="form-notch-trailing"></div>
+    <div class="parent container d-flex justify-content-center align-items-center h-100 pt-0 pb-0 ps-0 px-0">
+        <div class="child">
+            <div class="jumbotron text-center, mb-4">
+                <h1>Create account</h1>
             </div>
-          </div>
+            <div class="container">
+                <!-- Username input -->
+                <div class="form-outline mb-4">
+                    <input type="text" id="registerUsername" class="form-control">
+                    <label class="form-label" for="registerUsername" style="margin-left: 0px;">Username</label>
+                    <div class="form-notch">
+                        <div class="form-notch-leading" style="width: 9px;"></div>
+                        <div class="form-notch-middle" style="width: 66.4px;"></div>
+                        <div class="form-notch-trailing"></div>
+                    </div>
+                </div>
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input type="password" id="registerPassword" class="form-control">
+                    <label class="form-label" for="registerPassword" style="margin-left: 0px;">Password</label>
+                    <div class="form-notch">
+                        <div class="form-notch-leading" style="width: 9px;"></div>
+                        <div class="form-notch-middle" style="width: 64.8px;"></div>
+                        <div class="form-notch-trailing"></div>
+                    </div>
+                </div>
 
-          <!-- Username input -->
-          <div class="form-outline mb-4">
-            <input type="text" id="registerUsername" class="form-control">
-            <label class="form-label" for="registerUsername" style="margin-left: 0px;">Username</label>
-            <div class="form-notch">
-              <div class="form-notch-leading" style="width: 9px;"></div>
-              <div class="form-notch-middle" style="width: 66.4px;"></div>
-              <div class="form-notch-trailing"></div>
+                <!-- Repeat Password input -->
+                <div class="form-outline mb-4">
+                    <input type="password" id="registerRepeatPassword" class="form-control">
+                    <label class="form-label" for="registerRepeatPassword" style="margin-left: 0px;">Repeat
+                        password</label>
+                    <div class="form-notch">
+                        <div class="form-notch-leading" style="width: 9px;"></div>
+                        <div class="form-notch-middle" style="width: 106.4px;"></div>
+                        <div class="form-notch-trailing"></div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <!-- Password input -->
-          <div class="form-outline mb-4">
-            <input type="password" id="registerPassword" class="form-control">
-            <label class="form-label" for="registerPassword" style="margin-left: 0px;">Password</label>
-            <div class="form-notch">
-              <div class="form-notch-leading" style="width: 9px;"></div>
-              <div class="form-notch-middle" style="width: 64.8px;"></div>
-              <div class="form-notch-trailing"></div>
-            </div>
-          </div>
 
-          <!-- Repeat Password input -->
-          <div class="form-outline mb-4">
-            <input type="password" id="registerRepeatPassword" class="form-control">
-            <label class="form-label" for="registerRepeatPassword" style="margin-left: 0px;">Repeat
-              password</label>
-            <div class="form-notch">
-              <div class="form-notch-leading" style="width: 9px;"></div>
-              <div class="form-notch-middle" style="width: 106.4px;"></div>
-              <div class="form-notch-trailing"></div>
+            <!-- Submit button -->
+            <div class="container d-inline-flex justify-content-around">
+                <button onclick="register_user()" class="btn btn-primary btn-block mb-3">Sign up</button>
+                <a href="/login">Sign in</a>
             </div>
-          </div>
         </div>
-
-        <!-- Submit button -->
-        <div class="container d-inline-flex justify-content-around">
-          <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
-          <a href="/login">Sign in</a>
-      </form>
-    </div>
-  </div>
 </body>
+
+<script src="/static/js/register.js">
+</script>
 
 </html>
